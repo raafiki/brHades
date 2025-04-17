@@ -1,0 +1,641 @@
+prontera,150,170,5	script	Teste 1	CLEAR_NPC,{
+OnInit:
+
+
+	.@UID = getnpcid(0);
+    if (.@UID <= 0) end;
+    setunittitle(.@UID, "[ TESTE ]");
+    setunitdata .@UID, UNPC_GROUP_ID, 25; // id da pasta group em 'texture'
+
+
+	// setunitdata (getnpcid(0),UNPC_SEX,SEX_FEMALE);
+	setunitdata (getnpcid(0),UNPC_CLASS,JOB_RUNE_KNIGHT);
+	setunitdata (getnpcid(0),UNPC_HAIRSTYLE,4);
+	setunitdata (getnpcid(0),UNPC_HAIRCOLOR,7);
+	setunitdata (getnpcid(0),UNPC_HEADTOP,1);
+
+
+	setunitdata(getnpcid(0), UNPC_HEADMIDDLE, 2118);
+	setunitdata(.@UID, UNPC_HEADBOTTOM, 188);
+	setunitdata(getnpcid(0), UNPC_CLOTHCOLOR, 4);
+	setunitdata(getnpcid(0), UNPC_ROBE, 131);
+
+end;
+}
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+prontera,148,178,5	script	SellAll	543 ,{
+
+.@overcharge_lv = getskilllv( "MC_OVERCHARGE" );
+if( .@overcharge_lv )
+	.@overcharge_rate = 105 + ( 2  * .@overcharge_lv ) - ( ( .@overcharge_lv >= 10 )? 1:0 );
+
+getinventorylist;
+for (.@i=0; .@i < @inventorylist_count ; .@i++) {
+
+	if( @inventorylist_equip[.@i] ) continue; // Is not Equiped
+	if( getiteminfo(@inventorylist_id[.@i],2) == 6 ) continue; // Is not a card
+	if( @inventorylist_favorite[.@i] ) continue; // Is not favorite
+
+	.@item_sell_price = getiteminfo( @inventorylist_id[.@i],1 )*@inventorylist_amount[.@i];
+	mes " > "+getitemname( @inventorylist_id[.@i] )+" ["+@inventorylist_amount[.@i]+"] : "+callfunc("F_InsertComma",.@item_sell_price)+"z";
+	.@cost += .@item_sell_price;
+}
+
+if( .@cost ){
+
+	if( .@overcharge_lv )
+		.@overcharge_cost = (  (.@cost * .@overcharge_rate) /100 ) - .@cost;
+		mes "+" + callfunc("F_InsertComma",.@overcharge_cost) + "z Overcharge Lvl. " + .@overcharge_lv + " [+"+(.@overcharge_rate-100)+"%] ";
+
+	mes "Sell all items for "+ callfunc("F_InsertComma",(.@cost+.@overcharge_cost)) +" zeny?";
+
+	if( select( "Yes","Cancel" ) == 1 ){
+		for (.@i=0; .@i < @inventorylist_count ; .@i++) {
+			if( @inventorylist_equip[.@i] ) continue; // Is not Equiped
+			if( getiteminfo(@inventorylist_id[.@i],2) == 6 )continue  ;//Is not a card
+			if( @inventorylist_favorite[.@i] ) continue; // Is not favorite
+			delitem @inventorylist_id[.@i],@inventorylist_amount[.@i];
+		}
+		Zeny += .@cost + .@overcharge_cost;
+	}
+
+}else{
+	mes "You dont have any items to sell.";
+}
+close;
+}
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+sec_in01.gat,101,172,5	shop	3-1 Shop	731,6120:200,6121:200,6122:200,6123:200,6124:250,6128:1000,6144:1000,7940:15000,11513:200,12333:500,12341:20000,12383:1000
+sec_in01.gat,101,170,5	shop	RK & GX Shop	946,12717:2000,12718:2000,12719:2000,12720:2000,12721:2000,12721:2000,12722:2000,12723:2000,12724:2000,12725:2000,12726:2000,12727:2000,12728:2000,12729:2000,12730:2000,12731:2000,12732:2000,12733:2000
+sec_in01.gat,101,168,5	shop	Warlock Shop	743,6189:100000,6190:100000,6191:100000,6192:100000,6193:100000,6194:100000,6195:100000,6196:100000,6197:100000,6198:100000,6199:100000,6200:100000,6201:100000,6202:100000,6203:100000,6204:100000,6205:100000
+sec_in01.gat,101,166,5	shop	Mechanic Shop	813,1549:10000,2139:20000,2140:20000,2800:100000,2801:100000,2802:500000,2803:100000,2804:100000,2805:100000,2806:150000,2807:200000,2808:250000,2809:100000,2810:100000
+sec_in01.gat,101,164,5	shop	Mechanic Ammo	813,6145:100,6146:300,6147:100,12392:220,12393:500,12394:1100,18000:100,18001:200,18002:200,18003:200,18004:1000
+sec_in01.gat,101,162,5	shop	Genetic Shop	731,6210:500,6211:1000,6212:1000,6213:1000,6214:1000,6215:1000,6216:2000,6217:4000,6244:100,6245:100,6246:100,6247:100,6248:600,6249:100,6250:300,6251:300,6252:100,6253:100,6254:100,6255:500,6256:100,6257:100
+sec_in01.gat,101,160,5	shop	Genetic Shop2	731,6258:800,6259:100,6260:100,6261:500;6262:400,6263:100,6264:100,6265:100,6279:1000,6280:1000,6281:1000,6282:1000,6283:1000,6284:1500,6285:1000,6297:300,11022:10000,11023:10000,11024:10000
+sec_in01.gat,101,158,5	shop	Guillotine Iten	435,12717:100000,12718:100000,12719:100000,12720:100000,12721:100000,12722:100000,12723:100000,12724:100000,7931:5000,7932:1500,7933:1500,7934:1500,7935:1500,7936:1500,7937:1500,6128:500
+sec_in01.gat,101,156,5	shop	Mechanic Itens	435,2800:100000,2801:100000,2802:500000,2803:100000,2804:100000,2805:100000,2806:150000,2807:200000,2808:100000,2809:200000,2810:200000,12392:1000,12393:1000,12394:1000,1549:100000,2139:20000,6145:10,12383:10000,6146:10000,18000:500,18001:500,18002:500,18003:500,18004:1000,6147:100
+sec_in01.gat,101,154,5	shop	Genetic Itens	435,6210:500,6211:1000,6212:1000,6213:500,6214:500,6215:500,6216:1000,6217:2000
+sec_in01.gat,101,152,5	shop	Warlock/Sorcerer Itens	435,6189:5000,6190:5000,6191:5000,6192:5000,6193:5000,6194:5000,6195:5000,6196:5000,6197:5000,6198:5000,6199:5000,6200:5000,6201:5000,6202:5000,6203:5000,6204:5000,6205:5000
+sec_in01.gat,101,150,5	shop	Ranger Itens	435,7940:15000,12341:20000,6124:250
+sec_in01.gat,101,148,5	shop	Rune Knight Itens	435,12734:200,12735:200,12736:200,12737:200,12738:200,7938:10000,7939:10000
+sec_in01.gat,99,148,5	shop	Shadow Itens	435,6120:120,6121:500,6122:500,6123:1000
+
+
+
+
+payon.gat,162,205,4	cashshop	Upador	1771,12208:3000,12312:4500,12900:16000,13696:20000,14533:4000,14592:3500
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+prontera,164,169,4	script	CashEspecial#	63,{
+mes "[^1E90FF Maximizador ^000000]";
+mes " ";
+mes "Você tem "+#CASHPOINTS+" ROPs .";
+mes " ";
+mes "Posso Maximizar sua Armadura !";
+next;
+menu"[+10 Armadura ] + 5 de Força - 2000 ROPs",FOR5,"[+10 Armadura ] + 5 de Agilidade - 2000 ROPs",AGI5,"[+10 Armadura ] + 5 de Vitalidade - 2000 ROPs",VIT5,"[+10 Armadura ] + 5 de Inteligência - 2000 ROPs",INT5,"[+10 Armadura ] + 5 de Destreza - 2000 ROPs",DES5,"[+10 Armadura ] + 5 de Sorte - 2000 ROPs",SOR5;
+
+FOR5:
+set @encantamento,4704;
+set @value,2000;
+goto CONTINUE;
+
+AGI5:
+set @encantamento,4734;
+set @value,2000;
+goto CONTINUE;
+
+VIT5:
+set @encantamento,4744;
+set @value,2000;
+goto CONTINUE;
+
+INT5:
+set @encantamento,4714;
+set @value,2000;
+goto CONTINUE;
+
+DES5:
+set @encantamento,4724;
+set @value,2000;
+goto CONTINUE;
+
+SOR5:
+set @encantamento,4754;
+set @value,2000;
+goto CONTINUE;
+
+CONTINUE:
+mes "[^1E90FF Maximizador ^000000]";
+mes "Deseja maximizar sua armadura ?";
+switch(select("SIM","NÃO")) {
+next;
+
+case 1:
+if(getequipisequiped(EQI_ARMOR) == 0) goto L_NOARMOR;
+if(#CASHPOINTS < @value) goto L_NOCASH;
+set @itemid,getequipid(EQI_ARMOR);
+delitem @itemid,1;
+getitem2 @itemid,1,1,10,0,0,0,0,@encantamento;
+set #CASHPOINTS,#CASHPOINTS-@value;
+mes "[^1E90FF Maximizador ^000000]";
+mes "Prontinho !";
+close;
+
+case 2:
+close;
+}
+
+L_NOCASH:
+mes "[^1E90FF Maximizador ^000000]";
+mes "Você não tem ROPs suficiente !";
+close;
+
+L_NOARMOR:
+mes "[^1E90FF Maximizador ^000000]";
+mes "Você deve equipar uma Armadura !";
+close;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+// http://wiki.rebirthro.com/wiki/Bitcoin_Mining
+
+-	script	bitcoin_mining	-1,{
+for( .@i = 0; .@i < .pickaxe_list_size; .@i++ )
+	if( countitem( .pickaxe_list[.@i] ) ){
+		.@pickaxe_id = .pickaxe_list[.@i];
+		break;
+	}
+if( !.@pickaxe_id ){
+	message strcharinfo(0),"You dont have any pickaxe.";
+	
+}else{
+	.@rate = rand(100);
+	
+	// 20% fail + break
+	if( .@rate < 20 && .@pickaxe_id == .pickaxe_list[0] ){
+		delitem .@pickaxe_id,1;
+		specialeffect2 EF_REFINEFAIL;
+		message strcharinfo(0),"Your pickaxe has broken!";
+	}
+	// 50% success
+	else if( .@rate < 70 ){
+		message strcharinfo(0),"Mining Success.";
+		specialeffect2 EF_STEAL;
+		.@amount = rand(1,2);
+		getitem .mining_token,.@amount;
+		message strcharinfo(0),"You have successfully excavated this mining point and gained "+.@amount+"x"+getitemname( .mining_token );
+		initnpctimer;
+		hideonnpc strnpcinfo(0);
+		end;
+	}
+	// 30% fail
+	else{
+		message strcharinfo(0),"Mining Failed. Please try again.";
+		specialeffect2 EF_TEMP_FAIL;
+	}
+		
+}
+end;
+
+
+OnInit:
+if( strnpcinfo(2) != "" ) end;
+
+// mining token
+.mining_token = 7539;
+
+// npc prefix name + total duplicate npc you made.
+.npc_prefix$ = "Mine";
+.total_npc_count = 20;
+
+// pickaxe list
+setarray .pickaxe_list,
+	6010,	// normal pickaxe
+	6010;	// premium pickaxe
+	
+.pickaxe_list_size = getarraysize( .pickaxe_list );
+
+// map list that mine will appear.
+setarray .map_list$,
+	"pay_dun00",
+	"pay_dun01",
+	"pay_dun02";
+
+.map_list_size = getarraysize( .map_list$ );
+
+// change map on these time. ( default 6 hours )
+OnClock0300:
+OnClock0900:
+OnClock1500:
+OnClock2100:
+.map = rand( .map_list_size );
+	
+for( .@i = 0; .@i < .total_npc_count; .@i++ )
+	.@total = .@total + callsub( GenerateMine,.npc_prefix$+"#"+.@i );
+debugmes "Generated mine at "+.map_list$[.map]+" - "+.@total+" mine";
+end;
+
+GenerateMine:
+	.@npc_id = getnpcid( 0,getarg(0) );
+	
+	if( .@npc_id ){
+		do{
+			.@x = rand( 1,500 );
+			.@y = rand( 1,500 );
+		}while( !checkcell( .map_list$[.map],.@x,.@y,cell_chkpass ) );
+		unitwarp .@npc_id,.map_list$[.map],.@x,.@y;
+		return 1;
+	}
+	return 0;
+	
+OnTimer6000: // 600 seconds hide.
+	stopnpctimer;
+	.@npc_name$ = strnpcinfo(0);
+	hideoffnpc .@npc_name$;
+	callsub( GenerateMine,.@npc_name$ );
+	end;
+}
+
+// duplicates more if you need.
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#0	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#1	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#2	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#3	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#4	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#5	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#6	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#7	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#8	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#9	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#10	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#11	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#12	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#13	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#14	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#15	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#16	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#17	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#18	1908
+prontera,0,0,4	duplicate(bitcoin_mining)	Mine#19	1908
+
+
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+quiz_00,14,127,3	script	RFYL	421,{
+	if (getgmlevel() < 40) 	end;
+	set @npc$, "[ RFYL  ]";
+	set .GMName$,strcharinfo(0);
+	mes @npc$;
+	mes "GM Tip: Antes de iniciar evento você deve mudar sua velocidade para 150.";
+	mes "Command: @Speed 150";
+	next;
+	mes @npc$;
+	mes "Hello " + strcharinfo(0) + ", o que você gostaria de fazer?";
+	menu "Start RFYL",rfyl_check,"Entrar para o mapa do evento",warp_RFYL,"Nada",endrfyl;
+	rfyl_check:
+		next;
+		if ($@Event_Ongoing == 1) goto event_ongoing;
+		if ($@RFYL_event == 1) goto rfyl_started;
+		mes @npc$;
+		mes "Ok, Iniciando o evento.";
+		set $@RFYL_event,1;
+		set $@Event_Ongoing,1;
+		close2;
+		doevent "RFYL::OnstartRFYL";
+		end;
+	warp_RFYL:
+		next;
+		mes @npc$;
+		mes "Vou agora te mandar para o mapa do evento.";
+		warp "quiz_01",230,368;
+		end;
+	endrfyl:
+		next;
+		mes @npc$;
+		mes "Ok, Bom ver você.";
+		close;
+
+event_ongoing:
+	mes @npc$;
+	mes "Ainda há um evento em andamento. Aguarde até terminar";
+	close;
+
+rfyl_started:
+	mes @npc$;
+	mes "Há um evento em andamento.";
+	close;
+
+OnstartRFYL:
+set $@cloneevent,0;
+announce ""+.GMName$+": Evento corram por suas vidas !",0;
+enablenpc "Event Warper";
+donpcevent "Event Warper::OnEnable";
+initnpctimer;
+end;
+
+OnTimer10000:
+announce "Evento corram por suas vidas: Será fechado em 2 minutos.",0;
+end;
+
+OnTimer70000:
+announce "Evento corram por suas vidas: Será fechado em 1 minuto.",0;
+end;
+
+OnTimer100000:
+announce "Evento corram por suas vidas: Será fechado em 30 Segundos.",0;
+end;
+
+
+OnTimer130000:
+stopnpctimer;
+announce "Evento corram por suas vidas: Fechado.",0;
+disablenpc "Event Warper";
+delwaitingroom "Event Warper";
+set $@RFYL_event,0;
+set $@Event_Ongoing,0;
+end;
+
+}
+
+// ----------------------------------- RFYL Event ----------------------------------- [ RFYL Event ]
+// -------------------------------------------------------------------------------------------------
+quiz_01,230,375,4	script	Combo	497,{
+
+set .GMName$,strcharinfo(0);
+set @npc$, "[ Combo ]";
+if (getgmlevel() >= 40) goto Main_Menu;
+end;
+
+
+Main_Menu:
+	if ($@cloneevent == 0) {
+	mes @npc$;
+	mes "Olá " + strcharinfo(0) + ", o que você gostaria de fazer?";
+	menu "Iniciar evento",Start_Clone,"Debuff",Debuff_Clone,"Reabrir",reopen_rfyl,"Voltar para Sala de Eventos",warp_rfyl_back;
+	}
+	if ($@cloneevent == 1) {
+	mes @npc$;
+	mes "Hello " + strcharinfo(0) + ", o que você gostaria de fazer?";
+	menu "Convocar Clone",More_Clone,"Matar Clones",Reset_Clone,"Fim do Evento",end_event_rfyl;
+	}
+
+
+reopen_rfyl:	
+	next;
+	mes @npc$;
+	mes "Corram por suas vidas Warper Reabrir";
+	close2;
+	doevent "Combo::OnstartRFYL2";
+	end;
+
+OnstartRFYL2:
+set $@cloneevent,0;
+set $@RFYL_event,1;
+set $@Event_Ongoing,1;
+set .GMName$,strcharinfo(0);
+announce ""+.GMName$+": Evento corram por suas vidas !",0;
+enablenpc "Event Warper";
+donpcevent "Event Warper::OnEnable";
+initnpctimer;
+end;
+
+OnTimer10000:
+announce "Evento corram por suas vidas: será fechado em 2 minutos.",0;
+end;
+
+OnTimer70000:
+announce "Evento corram por suas vidas: Warp será fechado em 1 minuto.",0;
+end;
+
+OnTimer100000:
+announce "Evento corram por suas vidas: será fechado em 30 Segundos.",0;
+end;
+
+
+OnTimer130000:
+stopnpctimer;
+announce "Evento corram por suas vidas: Fechado.",0;
+disablenpc "Event Warper";
+delwaitingroom "Event Warper";
+set $@RFYL_event,0;
+set $@Event_Ongoing,0;
+end;
+
+
+Reset_Clone:
+	next;
+	mes @npc$;
+	mes "Todos os clones estão mortos";
+	atcommand "@killmonster";
+	close;
+end_event_rfyl:
+	set $@cloneevent,0;
+	next;
+	mes @npc$;
+	mes "Event Finish.";
+	atcommand "@killmonster";
+	close;
+
+warp_rfyl_back:
+	warp "quiz_00",18,119;
+	end;
+
+reset_event_rfyl:
+	set $@cloneevent,0;
+	mes "Event Reseted";
+	close;
+
+More_Clone:
+	if (.clonesummoning) {
+		mes "Please wait.";
+		close;
+	}
+	close2;
+	set .clonesummoning,1;
+	mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 5",0;
+	sleep2 1000;
+	mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 4",0;
+	sleep2 1000;
+	mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 3",0;
+	sleep2 1000;
+	mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 2",0;
+	sleep2 1000;
+	mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 1",0;
+	sleep2 500;
+	clone "quiz_01",230,368,"",$@master,0;
+	mapannounce "quiz_01",""+.GMName$+" Convocou outro clone!",0;
+	emotion ET_KIK;
+	set .clonesummoning,0;
+	end;
+
+Debuff_Clone:
+	close2;
+	mapannounce "quiz_01",""+.GMName$+": Debuffing...",0;
+	sleep2 3000;
+	atcommand "@doommap";
+	atcommand "@raisemap";
+	end;
+
+Start_Clone:
+set .GMName$,strcharinfo(0);
+set $@master,getcharid(0);
+set $@cloneevent,1;
+close2;
+sleep2 1;
+mapannounce "quiz_01",""+.GMName$+": Evento corram por suas vidas Está comeÃ§ando, prepare-se!!",0;
+sleep2 4000;
+mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 5",0;
+sleep2 1000;
+mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 4",0;
+sleep2 1000;
+mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 3",0;
+sleep2 1000;
+mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 2",0;
+sleep2 1000;
+mapannounce "quiz_01",""+.GMName$+": Sumonando clone mal em 1",0;
+sleep2 500;
+mapannounce "quiz_01",""+.GMName$+": Evento corram por suas vidas iniciado!",0;
+set .clonesummoning,0;
+sleep2 100;
+clone "quiz_01",230,368,"",$@master,0;
+npctalk "RUN FOR YOUR LIFE!";
+emotion ET_KIK;
+sleep2 5000;
+end;
+
+}
+
+quiz_01	mapflag	noskill
+quiz_01	mapflag	nosave	SavePoint
+quiz_01	mapflag	noteleport
+quiz_01	mapflag	nomemo
+quiz_01	mapflag	notrade
+quiz_01	mapflag	noreturn
+quiz_01	mapflag	nodrop
+quiz_01	mapflag	nowarp
